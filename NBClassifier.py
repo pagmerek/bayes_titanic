@@ -66,7 +66,7 @@ class NBClassifier:
         self.calculate_prob()
         self.calculate_prior()
 
-    def classify(self, x):
+    def classify(self, x, threshold):
         """
         Obliczenie wartości 
         P(survived = 1 | X.attributes) oraz P(survived = 0 | X.attributes)
@@ -86,7 +86,9 @@ class NBClassifier:
                 died_mean = self.probabilites[attribute]['died']['mean']
                 died_var = self.probabilites[attribute]['died']['variance']
                 died_prob *= normal_distribution(died_var,died_mean,value)
-            if died_prob < survived_prob:
+            
+            died_prob_norm = died_prob/(died_prob + survived_prob)
+            if died_prob_norm < threshold:
                 predicted.append(1)
             else:
                 predicted.append(0)
